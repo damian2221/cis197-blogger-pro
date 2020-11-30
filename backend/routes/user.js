@@ -61,6 +61,34 @@ router.get('/:username', isAuthenticated, async (req, res, next) => {
   }
 })
 
+router.put('/edit', isAuthenticated, async (req, res, next) => {
+  const {
+    password, currentPassword, first_name, last_name, introduction, gender,
+  } = req.body
+
+  User.findOne({ username: req.session.username, password: currentPassword }, (err1, user) => {
+    if (err1) {
+      next(err1)
+    } else if (!user) {
+      next('Invalid password!')
+    } else {
+      const toUpdate = {
+        first_name, last_name, introduction, gender,
+      }
+      if (password) {
+        toUpdate.password = password
+      }
+      User.findOneAndUpdate({ _id: user._id }, toUpdate, err2 => {
+        if (err2) {
+          next(err2)
+        } else {
+          res.send('User edited successfully!')
+        }
+      })
+    }
+  })
+})
+
 router.post('/follow', async (req, res, next) => {
   const { follower, followee } = req.body
 
@@ -100,6 +128,7 @@ router.post('/signup', async (req, res, next) => {
     })
     await Follow.create({ follower: user._id, followee: user._id })
     req.session.username = username
+    req.session.user_id = user._id
     res.send('Account created')
   } catch (err) {
     next(err)
@@ -116,6 +145,7 @@ router.post('/login', (req, res, next) => {
       next('Invalid credentials!')
     } else {
       req.session.username = username
+      req.session.user_id = user._id
       res.send('Logged in')
     }
   })
@@ -123,6 +153,7 @@ router.post('/login', (req, res, next) => {
 
 router.post('/logout', isAuthenticated, (req, res) => {
   req.session.username = undefined
+  req.session.user_id = undefined
   res.send('Logged out')
 })
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import ArticlesList from './ArticlesList'
 
 const UserFullName = styled.h3`
   display: inline-block;
@@ -25,20 +26,28 @@ const UserProfile = ({ user }) => {
   const history = useHistory()
   const [targetUser, setTargetUser] = useState(null)
   const [isFollowButtonLocked, setIsFollowButtonLocked] = useState(false)
+  const [articles, setArticles] = useState(null)
 
   useEffect(() => {
-    axios.get(`/api/user/${username}`).then(res => {
-      if (res.data.username) {
-        setTargetUser(res.data)
+    axios.get(`/api/user/${username}`).then(userRes => {
+      if (userRes.data._id) {
+        setTargetUser(userRes.data)
+        axios.get(`/api/article/user/${userRes.data._id}`).then(articleRes => {
+          setArticles(articleRes.data)
+        }).catch(err => {
+          if (err && err.response) {
+            toastr.error(err.response.data)
+          }
+        })
       } else {
         history.push('/')
       }
     }).catch(err => {
       if (err && err.response) {
-        alert(err.response.data)
+        toastr.error(err.response.data)
       }
     })
-  }, [])
+  }, [username])
 
   if (!targetUser) {
     return (<></>)
@@ -60,7 +69,7 @@ const UserProfile = ({ user }) => {
     }).catch(err => {
       setIsFollowButtonLocked(false)
       if (err && err.response) {
-        alert(err.response.data)
+        toastr.error(err.response.data)
       }
     })
   }
@@ -92,6 +101,9 @@ const UserProfile = ({ user }) => {
             : 'This user does not have an introduction yet!' }
         </Introduction>
       </UserDetails>
+      <br />
+      <h5>Articles:</h5>
+      <ArticlesList articles={articles} />
     </div>
   )
 }

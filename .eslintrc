@@ -27,5 +27,8 @@
   },
   "parserOptions": {
     "ecmaVersion": 2017
+  },
+  "globals": {
+    "toastr": "writable"
   }
 }

@@ -30,7 +30,7 @@ const Search = () => {
       setResponseReceived(true)
     }).catch(err => {
       if (err && err.response) {
-        alert(err.response.data)
+        toastr.error(err.response.data)
       }
     })
   }, [fullName])

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -27,7 +27,7 @@ const Signup = ({ UNKNOWN_AUTH_STATUS, setAuthStatus }) => {
       setAuthStatus(UNKNOWN_AUTH_STATUS)
     }).catch(err => {
       if (err && err.response) {
-        alert(err.response.data)
+        toastr.error(err.response.data)
       }
     })
   }

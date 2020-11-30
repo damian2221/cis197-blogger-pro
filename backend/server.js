@@ -4,6 +4,7 @@ const cookieSession = require('cookie-session')
 const path = require('path')
 
 const UserRouter = require('./routes/user')
+const ArticleRouter = require('./routes/article')
 
 const app = express()
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/blogger-pro'
@@ -25,6 +26,7 @@ app.use(
 )
 
 app.use('/api/user', UserRouter)
+app.use('/api/article', ArticleRouter)
 
 app.use((err, req, res, next) => {
   res.status(500)

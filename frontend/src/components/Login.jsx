@@ -18,7 +18,7 @@ const Login = ({ UNKNOWN_AUTH_STATUS, setAuthStatus }) => {
       setAuthStatus(UNKNOWN_AUTH_STATUS)
     }).catch(err => {
       if (err && err.response) {
-        alert(err.response.data)
+        toastr.error(err.response.data)
       }
     })
   }

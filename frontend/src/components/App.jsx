@@ -13,6 +13,9 @@ import Login from './Login'
 import Signup from './Signup'
 import Header from './Header'
 import Search from './Search'
+import EditProfile from './EditProfile'
+import Home from './Home'
+import Article from './Article'
 
 const UNKNOWN_AUTH_STATUS = 0
 const UNAUTHORIZED = 1
@@ -71,13 +74,19 @@ const App = () => {
       <Wrapper>
         <Switch>
           <Route exact path="/">
-            hi
+            <Home user={user} />
           </Route>
           <Route path="/profile/:username">
             <UserProfile user={user} />
           </Route>
           <Route path="/search">
             <Search />
+          </Route>
+          <Route path="/edit-profile">
+            <EditProfile user={user} setUser={setUser} />
+          </Route>
+          <Route path="/article/:articleId">
+            <Article />
           </Route>
           <Route>
             <Redirect to="/" />

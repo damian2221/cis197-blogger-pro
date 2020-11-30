@@ -1,27 +1,31 @@
 import React from 'react'
 
-const UserDataForm = ({ formValues, onValueChange, hidePassword }) => (
+const UserDataForm = ({ formValues, onValueChange, isEdit }) => (
   <div>
-    Username (*):
-    <input
-      required
-      className="form-control"
-      defaultValue={formValues.username}
-      onChange={e => onValueChange('username', e.target.value)}
-    />
-    { hidePassword ? <></>
+    { isEdit ? <></>
       : (
         <>
-          Password (*):
+          Username (*):
           <input
             required
             className="form-control"
-            type="password"
-            defaultValue={formValues.password}
-            onChange={e => onValueChange('password', e.target.value)}
+            defaultValue={formValues.username}
+            onChange={e => onValueChange('username', e.target.value)}
           />
         </>
       ) }
+    { isEdit ? 'New ' : '' }
+    {' '}
+    Password
+    { isEdit ? '' : ' (*)' }
+    :
+    <input
+      required={!isEdit}
+      className="form-control"
+      type="password"
+      defaultValue={formValues.password}
+      onChange={e => onValueChange('password', e.target.value)}
+    />
     First name (*):
     <input
       required
@@ -53,6 +57,20 @@ const UserDataForm = ({ formValues, onValueChange, hidePassword }) => (
       defaultValue={formValues.introduction}
       onChange={e => onValueChange('introduction', e.target.value)}
     />
+    { isEdit
+      ? (
+        <>
+          <br />
+          Confirm your current password (*):
+          <input
+            required
+            className="form-control"
+            type="password"
+            defaultValue={formValues.currentPassword}
+            onChange={e => onValueChange('currentPassword', e.target.value)}
+          />
+        </>
+      ) : <></>}
   </div>
 )
 
